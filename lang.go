@@ -35,18 +35,18 @@ func SetLangTags(l ...language.Tag) {
 	langTags = l
 }
 
-// Accepts map that will contain translation structs for every language tag.
+// Accepts path for lanuage jsons and map that will contain translation structs for every language tag.
 // Additionally you have to provide empty translation struct to use it as a base for other languages
-// Function reads from lang/langTag.json, where langTag is string representation of language tag.
+// Function reads from path/langTag.json, where langTag is string representation of language tag.
 // If the json is missing, malformed or does not match your translation struct one-to-one an non-nil error is returned.
-func LoadTexts[T any](l map[language.Tag]*T, t T) error {
+func LoadTexts[T any](path string, l map[language.Tag]*T, t T) error {
 	if len(langTags) == 0 {
 		return errors.New("You need to use SetLangTags before LoadTexts")
 	}
 	for _, lang := range langTags {
 		t_copy := t
 		l[lang] = &t_copy
-		if err := load(l[lang], "lang/"+lang.String()+".json"); err != nil {
+		if err := load(l[lang], path+lang.String()+".json"); err != nil {
 			return err
 		}
 	}
